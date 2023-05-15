@@ -2,25 +2,30 @@ from telethon.sync import TelegramClient
 from datetime import datetime, timedelta
 import pytz
 # api_id and api_hash you must take from https://my.telegram.org/. Create your app (any) and get it.
-api_id =                                        # Your api_id in int format (for example, 1234567)
-api_hash =                                      # Your api_hash in str format (for example, 'deadbeef1337600613')
-username =                                      # Session name in str format (for example, 'Anon')
+api_id = 0    # Your api_id in int format (for example, 1234567)
+api_hash = '' # Your api_hash in str format (for example, 'deadbeef1337600613')
+username = '' # Session name in str format (for example, 'Anon')
 
 client = TelegramClient(username, api_id, api_hash)
 client.start()
-tz = pytz.timezone("Europe/Moscow")             # You can choose any zone. For example, you can use UTC (tz = pytz.UTC)
-delta = timedelta(hours=24)                     # For all message, older than 24 hours.
-counter_deleted_message = 0
+
+#dt_until_date = datetime.now() - timedelta(weeks=52)
+messages_deleted = 0
+
+print('starting..')
 for dialog in client.iter_dialogs():
+    print('dialog', dialog.id)
     try:
-        for message in client.iter_messages(dialog.id, from_user='me'):
-            if (tz.localize(datetime.now()) - message.date.replace(tzinfo=tz)) > delta and message.raw_text is not None:
-                try:
-                    client.delete_messages(dialog.id, message)
-                    counter_deleted_message += 1
-                except errors.FloodWaitError as e:
-                    print('Have to sleep', e.seconds, 'seconds')
-                    time.sleep(e.seconds)    
+        for message in client.iter_messages(dialog.id, offset_date=datetime(2023, 1, 1)):
+            try:
+                messages_deleted += 1
+                print('del (', format(messages_deleted), ') msg', message.id, message.date)
+                message.delete() 
+            except errors.FloodWaitError as e:
+                print('flood timeout, sleeping', e.seconds, 'seconds')
+                time.sleep(e.seconds)
     except Exception:
+        print('error getting messages')
         pass
-print('Deleted {} post(s)'.format(counter_deleted_message))
+
+print('script ended, deletion counter:', format(messages_deleted))
