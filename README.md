@@ -1,11 +1,16 @@
-# del_my_message
-Deletes your messages from telegram.<br>
-By default, you delete all messages older than 24 hours.<br>
-Only for chats and dialogs you are currently in.<br>
+# telegram data purge
+This is a more extreme and very fast version of https://github.com/seabasssec/del_my_message
+
+Deletes everything that you're allowed to delete from telegram.<br>
+Including messages from other people, photos, files, etc. everything that was sent.<br>
+Deletions are for both sides (purge).<br>
+One restriction: Only for chats and groups you are currently in.<br>
 <b>--------------------------------------</b><br>
 <b>BE CAREFUL!</b><br>
-Please note that the script deletes ALL YOUR messages. Including messages from your private channels that you created.<br>
+Please note that the script deletes EVERYTHING up to specified date. Including data in your public & private channels, even saved messages.<br>
 <b>--------------------------------------</b><br>
+You can change the date by searching this part of the code: offset_date=datetime(2023, 1, 1)
+Everything before that date, will be deleted. Y, M, D
 
 Before working with Telegram’s API, you need to get your own API ID and hash:<br>
 
